@@ -294,7 +294,7 @@ impl Vmm {
                 self.mmio_device_manager.get_device_info(),
                 self.vm.get_irqchip(),
                 initrd,
-                self.smbios_oem_strings,
+                self.smbios_oem_strings.clone(),
             )
             .map_err(Error::ConfigureSystem)?;
         }
@@ -310,7 +310,7 @@ impl Vmm {
                 self.mmio_device_manager.get_device_info(),
                 self.vm.get_irqchip(),
                 initrd,
-                self.smbios_oem_strings,
+                self.smbios_oem_strings.clone(),
             )
             .map_err(Error::ConfigureSystem)?;
         }
