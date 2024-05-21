@@ -44,7 +44,7 @@ pub type Result<T> = result::Result<T, Error>;
 pub fn setup_smbios(
     mem: &GuestMemoryMmap,
     start_addr: u64,
-    oem_strings: Option<Vec<String>>,
+    oem_strings: &Option<Vec<String>>,
 ) -> Result<u64> {
     let start_addr = GuestAddress(start_addr);
     let table_starting_addr = start_addr
@@ -122,7 +122,7 @@ fn write_type_1_table(mem: &GuestMemoryMmap, mut current: GuestAddress) -> Resul
 fn write_type_11_table(
     mem: &GuestMemoryMmap,
     mut current: GuestAddress,
-    oem_strings: Option<Vec<String>>,
+    oem_strings: &Option<Vec<String>>,
 ) -> Result<GuestAddress> {
     let Some(oem_strings) = oem_strings else {
         return Ok(current);
