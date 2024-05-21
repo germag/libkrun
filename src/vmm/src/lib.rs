@@ -203,7 +203,7 @@ pub struct Vmm {
     #[cfg(target_arch = "x86_64")]
     pio_device_manager: PortIODeviceManager,
 
-    smbios_oem_strings: Option<Vec<String>>
+    smbios_oem_strings: Option<Vec<String>>,
 }
 
 impl Vmm {

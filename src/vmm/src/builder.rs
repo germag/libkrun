@@ -571,7 +571,7 @@ pub fn build_microvm(
         mmio_device_manager,
         #[cfg(target_arch = "x86_64")]
         pio_device_manager,
-        smbios_oem_strings: None,
+        smbios_oem_strings: vm_resources.smbios_oem_strings.clone(),
     };
 
     #[cfg(not(feature = "tee"))]

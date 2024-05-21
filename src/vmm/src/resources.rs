@@ -112,6 +112,8 @@ pub struct VmResources {
     pub gpu_virgl_flags: Option<u32>,
     /// File to send console output.
     pub console_output: Option<PathBuf>,
+    /// SMBIOS OEM Strings
+    pub smbios_oem_strings: Option<Vec<String>>,
 }
 
 impl VmResources {

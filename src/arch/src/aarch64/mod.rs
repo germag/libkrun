@@ -110,7 +110,8 @@ pub fn configure_system<T: DeviceInfoForFDT + Clone + Debug>(
     .map_err(Error::SetupFDT)?;
 
     #[cfg(feature = "efi")]
-    smbios::setup_smbios(guest_mem, layout::SMBIOS_START, _smbios_oem_strings).map_err(Error::Smbios)?;
+    smbios::setup_smbios(guest_mem, layout::SMBIOS_START, _smbios_oem_strings)
+        .map_err(Error::Smbios)?;
 
     Ok(())
 }

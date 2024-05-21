@@ -53,6 +53,8 @@ const KRUNFW_MIN_VERSION: u32 = 4;
 const KRUN_SUCCESS: i32 = 0;
 // Maximum number of arguments/environment variables we allow
 const MAX_ARGS: usize = 4096;
+// The SMBIOS OEM String structure reserves an u8 to count the number of strings,
+const MAX_SMBIOS_OEM_STRINGS: u8 = u8::MAX;
 
 // Path to the init binary to be executed inside the VM.
 const INIT_PATH: &str = "/init.krun";
@@ -874,6 +876,42 @@ pub unsafe extern "C" fn krun_set_console_output(ctx_id: u32, c_filepath: *const
         }
         Entry::Vacant(_) => -libc::ENOENT,
     }
+}
+
+#[allow(clippy::missing_safety_doc)]
+#[no_mangle]
+pub unsafe extern "C" fn krun_set_smbios_oem_strings(
+    ctx_id: u32,
+    oem_strings: *const *const c_char,
+    count: u8,
+) -> i32 {
+    if oem_strings.is_null() || count > MAX_SMBIOS_OEM_STRINGS {
+        return -libc::EINVAL;
+    }
+
+    let cstr_ptr_slice = slice::from_raw_parts(oem_strings, count as usize);
+
+    let mut oem_strings = Vec::new();
+
+    for cstr_ptr in cstr_ptr_slice {
+        if cstr_ptr.is_null() {
+            return -libc::EINVAL;
+        }
+        let Ok(s) = CStr::from_ptr(*cstr_ptr).to_str() else {
+            return -libc::EINVAL;
+        };
+        oem_strings.push(s.to_string());
+    }
+
+    match CTX_MAP.lock().unwrap().entry(ctx_id) {
+        Entry::Occupied(mut ctx_cfg) => {
+            ctx_cfg.get_mut().vmr.smbios_oem_strings =
+                (!oem_strings.is_empty()).then_some(oem_strings)
+        }
+        Entry::Vacant(_) => return -libc::ENOENT,
+    }
+
+    KRUN_SUCCESS
 }
 
 #[cfg(feature = "net")]
