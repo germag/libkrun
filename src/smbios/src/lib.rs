@@ -24,7 +24,7 @@ impl std::error::Error for Error {}
 impl Display for Error {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         use self::Error::{
-            SmBiosOverflow, NotEnoughMemory, OEMStringsOverflow, WriteData, WriteSmbiosEp,
+            NotEnoughMemory, OEMStringsOverflow, SmBiosOverflow, WriteData, WriteSmbiosEp,
         };
 
         let description = match self {
@@ -44,7 +44,7 @@ pub type Result<T> = result::Result<T, Error>;
 pub fn setup_smbios(
     mem: &GuestMemoryMmap,
     start_addr: u64,
-    oem_strings: Option<&[&str]>,
+    oem_strings: Option<Vec<String>>,
 ) -> Result<u64> {
     let start_addr = GuestAddress(start_addr);
     let table_starting_addr = start_addr
@@ -122,7 +122,7 @@ fn write_type_1_table(mem: &GuestMemoryMmap, mut current: GuestAddress) -> Resul
 fn write_type_11_table(
     mem: &GuestMemoryMmap,
     mut current: GuestAddress,
-    oem_strings: Option<&[&str]>,
+    oem_strings: Option<Vec<String>>,
 ) -> Result<GuestAddress> {
     let Some(oem_strings) = oem_strings else {
         return Ok(current);
@@ -137,7 +137,7 @@ fn write_type_11_table(
     current = write_obj(mem, oemstrs, current)?;
 
     for s in oem_strings {
-        current = write_string(mem, s, current)?;
+        current = write_string(mem, s.as_str(), current)?;
     }
 
     current = write_obj(mem, 0u8, current)?;
