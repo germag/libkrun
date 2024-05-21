@@ -202,6 +202,8 @@ pub struct Vmm {
     mmio_device_manager: MMIODeviceManager,
     #[cfg(target_arch = "x86_64")]
     pio_device_manager: PortIODeviceManager,
+
+    smbios_oem_strings: Option<Vec<String>>
 }
 
 impl Vmm {
@@ -292,6 +294,7 @@ impl Vmm {
                 self.mmio_device_manager.get_device_info(),
                 self.vm.get_irqchip(),
                 initrd,
+                self.smbios_oem_strings,
             )
             .map_err(Error::ConfigureSystem)?;
         }
@@ -307,6 +310,7 @@ impl Vmm {
                 self.mmio_device_manager.get_device_info(),
                 self.vm.get_irqchip(),
                 initrd,
+                self.smbios_oem_strings,
             )
             .map_err(Error::ConfigureSystem)?;
         }

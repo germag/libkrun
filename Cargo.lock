@@ -64,6 +64,7 @@ dependencies = [
  "kvm-bindings",
  "kvm-ioctls",
  "libc",
+ "smbios",
  "utils",
  "vm-fdt",
  "vm-memory",
@@ -889,6 +890,13 @@ dependencies = [
  "serde_bytes",
  "static_assertions",
  "uuid",
+]
+
+[[package]]
+name = "smbios"
+version = "0.1.0"
+dependencies = [
+ "vm-memory",
 ]
 
 [[package]]

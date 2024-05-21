@@ -1,5 +1,5 @@
 [workspace]
-members = ["src/libkrun"]
+members = ["src/libkrun", "src/smbios"]
 resolver = "2"
 
 [profile.dev]
